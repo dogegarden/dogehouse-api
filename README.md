@@ -20,6 +20,13 @@
 
 ---
 
+## Endpoints
+- Base URL: `api.dogehouse.xyz/v1`
+
+## Calls
+- /rooms [Get all rooms currently active & public]
+- More underway or submit a PR.
+
 ## Branches
 
 - staging -> pr to this branch, here we will review code and contribulate
