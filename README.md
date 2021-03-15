@@ -21,7 +21,7 @@
 ---
 
 # API IS CURRENTLY NOT ONLINE.
-THe point of this API is so you do not have to clone it or setup dogehouse-js yourself, instead you can access read only data for your projects easily through our service.
+The point of this API is so you do not have to clone it or setup dogehouse-js yourself, instead you can access read only data for your projects easily through our service.
 
 ## Endpoints
 - Base URL: `api.dogehouse.xyz/v1`
