@@ -135,11 +135,4 @@ class App {
     }
 }
 
-module.exports = App
-REFRESH_TOKEN,{}
-        );
-        this.server.listen(this.port, fn);
-    }
-}
-
 module.exports = App;
