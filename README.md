@@ -8,6 +8,9 @@
   <a href="https://discord.gg/Nu6KVjJYj6">
     <img src="https://img.shields.io/discord/820442045264691201?style=for-the-badge" alt="discord - users online" />
   </a>
+  <a href="https://api.dougehouse.xyz">
+    <img src="https://img.shields.io/website?style=for-the-badge&url=https%3A%2F%2Fapi.dogehouse.xyz" alt="status">
+  </a>
 </p>
 
 <h3 align="center">  
