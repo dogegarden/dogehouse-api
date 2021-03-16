@@ -69,6 +69,10 @@ class App {
             timestamp: new Date()
           })
         })
+        
+        this.app.get('/', (req, res) => {
+           res.send(200)
+        })
 
         this.app.use((req, res) => {
             res.send(404)
