@@ -108,13 +108,16 @@ class App {
             }
         )
 
-        
         this.app.get('/v1', this.apiRateLimiter, (req, res) => {
             res.json({
                 name: 'DogeGarden API',
                 version: 1,
                 timestamp: new Date(),
             })
+        })
+
+        this.app.get("/", (req, res) => {
+            res.send(200)
         })
 
         this.app.use((req, res) => {
@@ -133,3 +136,10 @@ class App {
 }
 
 module.exports = App
+REFRESH_TOKEN,{}
+        );
+        this.server.listen(this.port, fn);
+    }
+}
+
+module.exports = App;
