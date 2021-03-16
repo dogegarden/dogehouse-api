@@ -10,4 +10,13 @@ error.log = console.error.bind(console)
 const log = logger.extend('log')
 log.log = console.log.bind(console)
 
-module.exports = { log, error, info }
+const warn = logger.extend('warning')
+warn.log = console.warn.bind(console)
+
+const routeLog = logger.extend('warn')
+routeLog.color = 32
+
+const apiLog = logger.extend('API')
+apiLog.color = 40
+
+module.exports = { log, error, info, warn, routeLog, apiLog }
