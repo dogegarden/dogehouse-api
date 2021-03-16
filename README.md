@@ -21,27 +21,32 @@
 ---
 
 # API IS CURRENTLY NOT ONLINE.
+
 The point of this API is so you do not have to clone it or setup dogehouse-js yourself, instead you can access read only data for your projects easily through our service.
 
 ## Endpoints
-- Base URL: `api.dogehouse.xyz/v1`
+
+-   Base URL: `api.dogehouse.xyz/v1`
 
 ## Calls
-- /rooms [Get all rooms currently active & public]
-- More underway or submit a PR.
+
+-   /rooms [Get all rooms currently active & public]
+-   More underway or submit a PR.
 
 ## Branches
 
-- staging -> pr to this branch, here we will review code and contribulate
-- master -> don't touch, this is what's running in the production environment
+-   staging -> pr to this branch, here we will review code and contribulate
+-   master -> don't touch, this is what's running in the production environment
 
 ## Installation
+
 1. Git clone https://github.com/dogegarden/dogehouse-api.git
 2. npm install
 3. fill out example.env and rename to .env
 4. node index.js
 
 ### Default .env
+
 ```
 DOGEHOUSE_TOKEN=
 DOGEHOUSE_REFRESH_TOKEN=
@@ -49,4 +54,5 @@ PORT=
 ```
 
 ## Credits
+
 Thank you to Abalon#2525/https://github.com/alon-abadi for the awesome logo!

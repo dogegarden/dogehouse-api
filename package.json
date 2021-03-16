@@ -1,19 +1,31 @@
 {
-  "name": "dogehouse-api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@dogehouse/client": "^0.1.1",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "nodemon": "^2.0.7",
-    "readline": "^1.3.0"
-  }
+    "name": "dogehouse-api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "pm2 start src/index.js -i max --env production --name=DogeGarden",
+        "dev": "cross-env DEBUG=DogeGarden:* nodemon src/index.js",
+        "format": "prettier --write ."
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@dogehouse/client": "^0.1.1",
+        "compression": "^1.7.4",
+        "cors": "^2.8.5",
+        "cross-env": "^7.0.3",
+        "debug": "^4.3.1",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "express-rate-limit": "^5.2.6",
+        "helmet": "^4.4.1",
+        "morgan": "^1.10.0",
+        "pm2": "^4.5.5",
+        "readline": "^1.3.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7",
+        "prettier": "^2.2.1"
+    }
 }
