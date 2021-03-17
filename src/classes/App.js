@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 const logger = require('morgan');
 const Router = require('./Router');
 const Logger = require('../util/Logger')
-const { connect } = require('@dogehouse/client');
+const { raw: { connect }, wrap } = require('dogehouse-js');
 require('dotenv').config();
 
 class App {
@@ -13,7 +13,6 @@ class App {
         this.server = require('http').createServer(this.app);
         this.app.use(express.json());
         this.app.use(logger(':method :url :status :res[content-length] - :response-time ms'));
-
     }
     /**
      * 
@@ -53,17 +52,28 @@ class App {
         );
 
         this.app.get('/v1/rooms', async (req, res) => {
-            let rooms = await connection.fetch("all_rooms", { cursor: 0 });
-            res.send(rooms)
+            return res.redirect('/v1/popularRooms')
         })
 
         this.app.get('/v1/popularRooms', async (req, res) => {
             let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
-            res.send(rooms)
+            return res.send(rooms)
+        })
+
+        this.app.get('/v1/statistics', async (req, res) => {
+            let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
+            let insideRooms = rooms.rooms
+
+            return res.send({
+                "totalRooms": insideRooms.length,
+                "totalOnline": insideRooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
+                timestamp: new Date()
+
+            })
         })
 
         this.app.get('/v1', (req, res) => {
-          res.json({ 
+          return res.json({ 
             name: 'DogeGarden API',
             version: 1,
             timestamp: new Date()
@@ -71,15 +81,16 @@ class App {
         })
         
         this.app.get('/', (req, res) => {
-           res.send(200)
+           return res.sendStatus(200)
         })
 
         this.app.use((req, res) => {
-            res.send(404)
+            return res.sendStatus(404)
         });
-    } // registerRoutes
+    }
 
     async listen(fn, https = false) {
+        if (!process.env.PORT) return Logger.error('Please add PORT= to your .env')
         this.server.listen(process.env.PORT, fn);
     }
 }
