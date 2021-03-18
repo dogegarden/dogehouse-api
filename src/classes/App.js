@@ -53,36 +53,53 @@ class App {
 
         this.app.get('/v1/rooms', async (req, res) => {
             return res.redirect('/v1/popularRooms')
-        })
+        });
 
         this.app.get('/v1/popularRooms', async (req, res) => {
-            let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
-            return res.send(rooms)
-        })
+            try {
+                let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
+                return res.send(rooms)
+            } catch(err) {
+                return(res.send({"Error": err}))
+            }
+        });
+
+        this.app.get('/v1/scheduledRooms', async (req, res) => {
+            try {
+                let scheduled_rooms = await connection.fetch("get_scheduled_rooms", { cursor: "", getOnlyMyScheduledRooms: false })
+                return res.send(scheduled_rooms)
+            } catch(err) {
+                return(res.send({"Error": err}))
+            }
+        });
 
         this.app.get('/v1/statistics', async (req, res) => {
-            let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
-            let insideRooms = rooms.rooms
+            try {
+                let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
+                let scheduledRooms = await connection.fetch("get_scheduled_rooms", { cursor: "", getOnlyMyScheduledRooms: false })
 
-            return res.send({
-                "totalRooms": insideRooms.length,
-                "totalOnline": insideRooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
-                timestamp: new Date()
-
-            })
-        })
+                return res.send({
+                    "totalRooms": rooms.rooms.length,
+                    "totalScheduledRooms": scheduledRooms.scheduledRooms.length,
+                    "totalOnline": rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
+                    timestamp: new Date()
+                })
+            } catch (err) {
+                return(res.send({"Error": err}))
+            }
+        });
 
         this.app.get('/v1', (req, res) => {
           return res.json({ 
             name: 'DogeGarden API',
-            version: 1,
+            version: 1.1,
             timestamp: new Date()
           })
-        })
+        });
         
         this.app.get('/', (req, res) => {
            return res.sendStatus(200)
-        })
+        });
 
         this.app.use((req, res) => {
             return res.sendStatus(404)
