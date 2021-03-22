@@ -5,6 +5,7 @@ const logger = require('morgan');
 const Router = require('./Router');
 const Logger = require('../util/Logger')
 const { raw: { connect }, wrap } = require('dogehouse-js');
+const Calls = require('../database/functions')
 require('dotenv').config();
 
 class App {
@@ -12,7 +13,7 @@ class App {
         this.app = express();
         this.server = require('http').createServer(this.app);
         this.app.use(express.json());
-        this.app.use(logger(':method :url :status :res[content-length] - :response-time ms'));
+        this.app.use(logger(':remote-addr >> :method :url :status :res[content-length] - :response-time ms'));
     }
     /**
      * 
@@ -51,8 +52,39 @@ class App {
             process.env.DOGEHOUSE_REFRESH_TOKEN,{}
         );
 
-        this.app.get('/v1/rooms', async (req, res) => {
-            return res.redirect('/v1/popularRooms')
+        const server2 = require('http').createServer();
+        const io = require('socket.io')(server2, { transports: ['websocket'], serveClient: false, path: '/socket' });
+
+        server2.listen(7080);
+
+        io.on('connection', (socket) => {
+            Logger.info('Socket Client Connected', io.sockets.sockets.size)
+
+            socket.on('disconnect', (data) => {
+                Calls.deleteBot(socket.id)
+                Logger.info('Socket Client Disconnected', io.sockets.sockets.size)
+            });
+
+            socket.on('init', async function () {
+                await Calls.insertBot(socket.id)
+                Logger.info('Socket Client Init', io.sockets.sockets.size)
+            })
+            
+            socket.on('transmit', async function (msg) { //recive data.
+                let new_data = {
+                    socket_id: socket.id,
+                    username: msg.username,
+                    current_room: msg.room,
+                    amount_serving: msg.serving
+                }
+                await Calls.editBot(socket.id, new_data)
+                Logger.info('Socket Client Transmit', socket.id)
+
+            });
+
+            socket.on('error', (err) => {
+                Logger.error('Socket Error', socket.id, err)
+            });
         });
 
         this.app.get('/v1/popularRooms', async (req, res) => {
@@ -61,6 +93,7 @@ class App {
                 return res.send(rooms)
             } catch(err) {
                 return(res.send({"Error": err}))
+                
             }
         });
 
@@ -82,6 +115,9 @@ class App {
                     "totalRooms": rooms.rooms.length,
                     "totalScheduledRooms": scheduledRooms.scheduledRooms.length,
                     "totalOnline": rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
+                    botAccounts: {
+                        totalBotsOnline: io.sockets.sockets.size,
+                    },
                     timestamp: new Date()
                 })
             } catch (err) {
@@ -89,10 +125,25 @@ class App {
             }
         });
 
+        this.app.get('/v1/bots', async (req, res) => {
+            try {
+                let bots = await Calls.getAllBots()
+                let total = {
+                    totalBots: bots.length,
+                    botsOnline: bots
+                }
+                return res.send(total)
+            } catch(err) {
+                return(res.send({"Error": err}))
+                
+            }
+        });
+
         this.app.get('/v1', (req, res) => {
+
           return res.json({ 
             name: 'DogeGarden API',
-            version: 1.1,
+            version: 1.2,
             timestamp: new Date()
           })
         });
@@ -106,7 +157,7 @@ class App {
         });
     }
 
-    async listen(fn, https = false) {
+    async listen(fn) {
         if (!process.env.PORT) return Logger.error('Please add PORT= to your .env')
         this.server.listen(process.env.PORT, fn);
     }
