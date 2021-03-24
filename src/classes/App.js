@@ -70,12 +70,11 @@ class App {
                 Logger.info('Socket Client Init', io.sockets.sockets.size)
             })
             
-            socket.on('transmit', async function (msg) { //recive data.
+            socket.on('transmit', async function (received) { //received data.
                 let new_data = {
-                    socket_id: socket.id,
-                    username: msg.username,
-                    current_room: msg.room,
-                    amount_serving: msg.serving
+                    bot: { uuid: received.bot.uuid, username: received.bot.username},
+                    room: { uuid: received.room.uuid, name: received.room.name, listening: received.room.listening, users: received.room.users }
+
                 }
                 await Calls.editBot(socket.id, new_data)
                 Logger.info('Socket Client Transmit', socket.id)
@@ -108,16 +107,16 @@ class App {
 
         this.app.get('/v1/statistics', async (req, res) => {
             try {
+                let bots_length = await Calls.getAllBotsLength()
                 let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
                 let scheduledRooms = await connection.fetch("get_scheduled_rooms", { cursor: "", getOnlyMyScheduledRooms: false })
 
                 return res.send({
-                    "totalRooms": rooms.rooms.length,
-                    "totalScheduledRooms": scheduledRooms.scheduledRooms.length,
-                    "totalOnline": rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
-                    botAccounts: {
-                        totalBotsOnline: io.sockets.sockets.size,
-                    },
+                    totalRooms: rooms.rooms.length,
+                    totalScheduledRooms: scheduledRooms.scheduledRooms.length,
+                    totalOnline: rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
+                    totalBotsOnline: io.sockets.sockets.size,
+                    totalBotsSendingTelemetry: bots_length,
                     timestamp: new Date()
                 })
             } catch (err) {
@@ -129,8 +128,7 @@ class App {
             try {
                 let bots = await Calls.getAllBots()
                 let total = {
-                    totalBots: bots.length,
-                    botsOnline: bots
+                    bots: bots
                 }
                 return res.send(total)
             } catch(err) {
@@ -143,7 +141,7 @@ class App {
 
           return res.json({ 
             name: 'DogeGarden API',
-            version: 1.2,
+            version: 1.3,
             timestamp: new Date()
           })
         });
@@ -160,6 +158,7 @@ class App {
     async listen(fn) {
         if (!process.env.PORT) return Logger.error('Please add PORT= to your .env')
         this.server.listen(process.env.PORT, fn);
+        await Calls.formatBots()
     }
 }
 

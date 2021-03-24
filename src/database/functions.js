@@ -15,6 +15,11 @@ class Calls {
         const collection = db.get('bots')
         return (await collection.findOneAndDelete({ socket_id: socket_id }))
     }
+
+    static async formatBots() {
+        const collection = db.get('bots')
+        return (await collection.remove({ }))
+    }
     
     static async editBot(socket_id, data_object) {
         const collection = db.get('bots')
@@ -24,6 +29,11 @@ class Calls {
     static async getAllBots() {
         const collection = db.get('bots')
         return (await collection.find({}))
+    }
+
+    static async getAllBotsLength() {
+        const collection = db.get('bots')
+        return (await collection.count())
     }
 
     static async getBotBySocket(id) {
