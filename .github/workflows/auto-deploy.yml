@@ -1,0 +1,19 @@
+name: Remote SSH
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: centos8
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.IP }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PRIVATE_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /opt/api-dogehouse
+          git pull
+          pm2 restart dogehouse-api
