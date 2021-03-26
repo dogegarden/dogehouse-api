@@ -2,7 +2,7 @@
   <img src="https://cdn.discordapp.com/attachments/820450983892222022/820961073980899328/dogegarden-bottom-cropped.png" alt="DogeGarden logo" />
 </p>
 <p align="center">
-  <strong>An open-source public and free RESTful API for reading from DogeHouse.</strong>
+  <strong>An open-source public and free REST API for reading from DogeHouse & DogeGarden.</strong>
 </p>
 <p align="center">
   <a href="https://discord.gg/Nu6KVjJYj6">
@@ -16,18 +16,25 @@
   <span> · </span>
   <a href="https://discord.gg/Nu6KVjJYj6">Discord</a>
   <span> · </span>
-  <a href="https://docs.dogehouse.xyz">Documentation (NEW)</a>
+  <a href="https://docs.dogehouse.xyz">Documentation</a>
 </h3>
 
 ---
 
+### Note
+- this is a live production version! any commits here get pushed to production. Only project managers are able push commits.
+
 ## Documentation
 - All routes, versions, endpoints, etc. Can be found on our documentation. https://docs.dogehouse.xyz
 
+- Version: 1.2 (v1)
+
 ## Installation
 
-1. Clone & install requirements
-2. Fill out .env
+- You can use the publicly hosted api: https://api.dogehouse.xyz
+
+1. Clone and npm i
+2. Fill out example.env and rename to .env
 3. Start index.js
 
 ## Credits

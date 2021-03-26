@@ -1,10 +1,12 @@
+// testing git actions.
 const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
 const logger = require('morgan');
 const Router = require('./Router');
 const Logger = require('../util/Logger')
-const { connect } = require('@dogehouse/client');
+const { raw: { connect }, wrap } = require('dogehouse-js');
+const Calls = require('../database/functions')
 require('dotenv').config();
 
 class App {
@@ -12,8 +14,7 @@ class App {
         this.app = express();
         this.server = require('http').createServer(this.app);
         this.app.use(express.json());
-        this.app.use(logger(':method :url :status :res[content-length] - :response-time ms'));
-
+        this.app.use(logger(':remote-addr >> :method :url :status :res[content-length] - :response-time ms'));
     }
     /**
      * 
@@ -52,35 +53,113 @@ class App {
             process.env.DOGEHOUSE_REFRESH_TOKEN,{}
         );
 
-        this.app.get('/v1/rooms', async (req, res) => {
-            let rooms = await connection.fetch("all_rooms", { cursor: 0 });
-            res.send(rooms)
-        })
+        const server2 = require('http').createServer();
+        const io = require('socket.io')(server2, { transports: ['websocket'], serveClient: false, path: '/socket' });
+
+        server2.listen(7080);
+
+        io.on('connection', (socket) => {
+            Logger.info('Socket Client Connected', io.sockets.sockets.size)
+
+            socket.on('disconnect', (data) => {
+                Calls.deleteBot(socket.id)
+                Logger.info('Socket Client Disconnected', io.sockets.sockets.size)
+            });
+
+            socket.on('init', async function () {
+                await Calls.insertBot(socket.id)
+                Logger.info('Socket Client Init', io.sockets.sockets.size)
+            })
+            
+            socket.on('transmit', async function (received) { //received data.
+                let new_data = {
+                    bot: { uuid: received.bot.uuid, username: received.bot.username},
+                    room: { uuid: received.room.uuid, name: received.room.name, listening: received.room.listening, users: received.room.users }
+
+                }
+                await Calls.editBot(socket.id, new_data)
+                Logger.info('Socket Client Transmit', socket.id)
+
+            });
+
+            socket.on('error', (err) => {
+                Logger.error('Socket Error', socket.id, err)
+            });
+        });
 
         this.app.get('/v1/popularRooms', async (req, res) => {
-            let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
-            res.send(rooms)
-        })
+            try {
+                let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
+                return res.send(rooms)
+            } catch(err) {
+                return(res.send({"Error": err}))
+                
+            }
+        });
+
+        this.app.get('/v1/scheduledRooms', async (req, res) => {
+            try {
+                let scheduled_rooms = await connection.fetch("get_scheduled_rooms", { cursor: "", getOnlyMyScheduledRooms: false })
+                return res.send(scheduled_rooms)
+            } catch(err) {
+                return(res.send({"Error": err}))
+            }
+        });
+
+        this.app.get('/v1/statistics', async (req, res) => {
+            try {
+                let bots_length = await Calls.getAllBotsLength()
+                let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
+                let scheduledRooms = await connection.fetch("get_scheduled_rooms", { cursor: "", getOnlyMyScheduledRooms: false })
+
+                return res.send({
+                    totalRooms: rooms.rooms.length,
+                    totalScheduledRooms: scheduledRooms.scheduledRooms.length,
+                    totalOnline: rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
+                    totalBotsOnline: io.sockets.sockets.size,
+                    totalBotsSendingTelemetry: bots_length,
+                    timestamp: new Date()
+                })
+            } catch (err) {
+                return(res.send({"Error": err}))
+            }
+        });
+
+        this.app.get('/v1/bots', async (req, res) => {
+            try {
+                let bots = await Calls.getAllBots()
+                let total = {
+                    bots: bots
+                }
+                return res.send(total)
+            } catch(err) {
+                return(res.send({"Error": err}))
+                
+            }
+        });
 
         this.app.get('/v1', (req, res) => {
-          res.json({ 
+
+          return res.json({ 
             name: 'DogeGarden API',
-            version: 1,
+            version: 1.3,
             timestamp: new Date()
           })
-        })
+        });
         
         this.app.get('/', (req, res) => {
-           res.send(200)
-        })
+           return res.sendStatus(200)
+        });
 
         this.app.use((req, res) => {
-            res.send(404)
+            return res.sendStatus(404)
         });
-    } // registerRoutes
+    }
 
-    async listen(fn, https = false) {
+    async listen(fn) {
+        if (!process.env.PORT) return Logger.error('Please add PORT= to your .env')
         this.server.listen(process.env.PORT, fn);
+        await Calls.formatBots()
     }
 }
 

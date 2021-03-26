@@ -16,6 +16,11 @@ class Logger {
         console.log(this.prefix + ' ' + chalk.green('[INFO]') + ' ' + args.join(' '))
     }
 
+    static error(...args) {
+        args = this.formatInput(args)
+        console.log(this.prefix + ' ' + chalk.red('[ERROR]') + ' ' + args.join(' '))
+    }
+
     static route(...args) {
         args = this.formatInput(args)
         console.log(this.prefix + ' ' + chalk.blue('[ROUTE]') + ' ' + args.join(' '))
