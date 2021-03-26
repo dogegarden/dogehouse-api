@@ -67,17 +67,17 @@ class App {
             });
 
             socket.on('init', async function () {
-                await Calls.insertBot(socket.id)
-                Logger.info('Socket Client Init', io.sockets.sockets.size)
+                Logger.info('Socket Client Init', io.sockets.sockets.size,)
             })
             
             socket.on('transmit', async function (received) { //received data.
                 let new_data = {
-                    bot: { uuid: received.bot.uuid, username: received.bot.username},
-                    room: { uuid: received.room.uuid, name: received.room.name, listening: received.room.listening, users: received.room.users }
+                    socket_id: socket.id,
+                    bot: { uuid: received.bot.uuid, username: received.bot.username || 'A Default Doge', avatar: received.bot.avatar || 'https://cdn.discordapp.com/attachments/824724836936187974/824936185734234132/orangeDiscordIcon.png'},
+                    room: { uuid: received.room.uuid, name: received.room.name || 'No Room', listening: received.room.listening || 'No Room', users: received.room.users || 'No Users' }
 
                 }
-                await Calls.editBot(socket.id, new_data)
+                await Calls.transmitBot(socket.id, new_data)
                 Logger.info('Socket Client Transmit', socket.id)
 
             });
@@ -117,8 +117,7 @@ class App {
                     totalScheduledRooms: scheduledRooms.scheduledRooms.length,
                     totalOnline: rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
                     totalBotsOnline: io.sockets.sockets.size,
-                    totalBotsSendingTelemetry: bots_length,
-                    timestamp: new Date()
+                    totalBotsSendingTelemetry: bots_length
                 })
             } catch (err) {
                 return(res.send({"Error": err}))
@@ -142,8 +141,8 @@ class App {
 
           return res.json({ 
             name: 'DogeGarden API',
-            version: 1.3,
-            timestamp: new Date()
+            support: 'https://discord.gg/JWDceH26Te',
+            version: '1.3.1'
           })
         });
         
@@ -159,7 +158,6 @@ class App {
     async listen(fn) {
         if (!process.env.PORT) return Logger.error('Please add PORT= to your .env')
         this.server.listen(process.env.PORT, fn);
-        await Calls.formatBots()
     }
 }
 
