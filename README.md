@@ -21,6 +21,9 @@
 
 ---
 
+### Note
+- this is a live production version! any commits here get pushed to production. Only project managers are able push commits.
+
 ## Documentation
 - All routes, versions, endpoints, etc. Can be found on our documentation. https://docs.dogehouse.xyz
 
