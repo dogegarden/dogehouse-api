@@ -17,5 +17,5 @@ jobs:
           nvm use 14
           cd /opt/api-dogehouse
           git config pull.rebase false
-          git pull master --force
+          git pull origin master --force
           pm2 restart dogehouse-api
