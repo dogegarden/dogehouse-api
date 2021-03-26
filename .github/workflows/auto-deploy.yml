@@ -1,4 +1,4 @@
-name: Remote SSH
+name: Production Deploy
 on:
   push:
     branches:
