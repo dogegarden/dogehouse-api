@@ -18,4 +18,5 @@ jobs:
           cd /opt/api-dogehouse
           git fetch --all
           git reset --hard origin/master
+          npm install --save
           pm2 restart dogehouse-api
