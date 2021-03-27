@@ -73,7 +73,7 @@ class App {
             socket.on('transmit', async function (received) { //received data.
                 let new_data = {
                     socket_id: socket.id,
-                    bot: { uuid: received.bot.uuid, username: received.bot.username || 'A Default Doge', avatar: received.bot.avatar || 'https://cdn.discordapp.com/attachments/824724836936187974/824936185734234132/orangeDiscordIcon.png'},
+                    bot: { uuid: received.bot.uuid, username: received.bot.username || 'A Default Doge', avatar: received.bot.avatarURL  || 'https://cdn.discordapp.com/attachments/824724836936187974/824936185734234132/orangeDiscordIcon.png'},
                     room: { uuid: received.room.uuid, name: received.room.name || 'No Room', listening: received.room.listening || 'No Room', users: received.room.users || 'No Users' }
 
                 }
