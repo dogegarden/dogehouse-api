@@ -156,6 +156,7 @@ class App {
     }
 
     async listen(fn) {
+        await Calls.formatBots()
         if (!process.env.PORT) return Logger.error('Please add PORT= to your .env')
         this.server.listen(process.env.PORT, fn);
     }
