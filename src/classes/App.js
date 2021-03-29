@@ -142,7 +142,7 @@ class App {
           return res.json({ 
             name: 'DogeGarden API',
             support: 'https://discord.gg/JWDceH26Te',
-            version: '1.3.1'
+            version: '1.3.2'
           })
         });
         
