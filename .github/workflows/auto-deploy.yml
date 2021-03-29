@@ -1,5 +1,8 @@
-name: Remote SSH
-on: [push]
+name: Production Deploy
+on:
+  push:
+    branches:
+      - master
 jobs:
 
   build:

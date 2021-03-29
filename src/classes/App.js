@@ -147,11 +147,11 @@ class App {
         });
         
         this.app.get('/', (req, res) => {
-           return res.sendStatus(200)
+           return res.sendStatus(200).json({name: "DogeGarden API", description: 'API for dogehouse.tv',versions: [{url: 'v1', versionCode: '1.3.1'}]})
         });
 
         this.app.use((req, res) => {
-            return res.sendStatus(404)
+            return res.sendStatus(404).json({message: "Resource not found.", documentation: "https://docs.dogehouse.xyz/"})
         });
     }
 
