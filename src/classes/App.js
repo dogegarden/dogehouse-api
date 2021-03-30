@@ -123,6 +123,27 @@ class App {
                 return(res.send({"Error": err}))
             }
         });
+        
+        this.app.get('/v1/shields', async (req, res) => {
+            try {
+                let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
+
+                return res.send({
+                    schemeaVersion: 1,
+                    label: "Dogehouse",
+                    message: rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0) + " online",
+                    color: "green"
+                })
+            } catch (err) {
+                return(res.send({
+                    schemeaVersion: 1,
+                    label: "Dogehouse",
+                    isError: true,
+                    message: err,
+                    color: "orange"
+                }))
+            }
+        });
 
         this.app.get('/v1/bots', async (req, res) => {
             try {
