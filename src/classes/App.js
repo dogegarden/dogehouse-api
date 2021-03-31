@@ -142,7 +142,7 @@ class App {
                     label: "Dogehouse",
                     isError: true,
                     message: err,
-                    logoSvg: dogesvg
+                    logoSvg: dogesvg,
                     color: "orange"
                 }))
             }
