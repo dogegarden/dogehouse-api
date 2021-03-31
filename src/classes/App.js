@@ -130,7 +130,7 @@ class App {
                 let rooms = await connection.fetch("get_top_public_rooms", { cursor: 0 });
 
                 return res.send({
-                    schemeaVersion: 1,
+                    schemaVersion: 1,
                     label: "Dogehouse",
                     message: rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0) + " online",
                     logoSvg: dogesvg,
@@ -138,7 +138,7 @@ class App {
                 })
             } catch (err) {
                 return(res.send({
-                    schemeaVersion: 1,
+                    schemaVersion: 1,
                     label: "Dogehouse",
                     isError: true,
                     message: err,
@@ -166,7 +166,7 @@ class App {
           return res.json({ 
             name: 'DogeGarden API',
             support: 'https://discord.gg/JWDceH26Te',
-            version: '1.3.2'
+            version: '1.3.3'
           })
         });
         
