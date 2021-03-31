@@ -133,7 +133,7 @@ class App {
                     schemeaVersion: 1,
                     label: "Dogehouse",
                     message: rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0) + " online",
-                    logoSvg: dogesvg
+                    logoSvg: dogesvg,
                     color: "green"
                 })
             } catch (err) {
