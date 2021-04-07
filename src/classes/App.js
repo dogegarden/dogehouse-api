@@ -78,8 +78,8 @@ class App {
                     room: { uuid: received.room.uuid, name: received.room.name || 'No Room', listening: received.room.listening || 'No Room', users: received.room.users || 'No Users' }
 
                 }
-//                 await Calls.transmitBot(socket.id, new_data)
-                Logger.info('Socket Client Transmit', socket.id)
+                 await Calls.transmitBot(received.bot.uuid, new_data)
+                Logger.info('Socket Client Transmit', socket.id, received.bot.uuid, received.bot.username)
 
             });
 
