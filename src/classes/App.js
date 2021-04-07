@@ -1,9 +1,9 @@
-// testing git actions.
 const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
 const logger = require('morgan');
 const Router = require('./Router');
+const cors = require('cors');
 const Logger = require('../util/Logger')
 const { raw: { connect }, wrap } = require('dogehouse-js');
 const Calls = require('../database/functions')
@@ -14,6 +14,9 @@ class App {
     constructor() {
         this.app = express();
         this.server = require('http').createServer(this.app);
+        this.app.use(cors({
+            origin: "*"
+        }))
         this.app.use(express.json());
         this.app.use(logger(':remote-addr >> :method :url :status :res[content-length] - :response-time ms'));
     }
