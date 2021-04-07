@@ -16,7 +16,7 @@ class Calls {
     
     static async transmitBot(bot_id, data_object) {
         const collection = db.get('bots')
-        let bot = await collection.findOne({bot.uuid: bot_id})
+        let bot = await collection.findOne({[bot.uuid]: bot_id})
         Logger.info('>> SEARCHING BOT', bot_id)
 
         if (bot === null) {
@@ -24,7 +24,7 @@ class Calls {
             return (await collection.insert(data_object))
         } else {
             Logger.info('>> UPDATING BOT', bot_id)
-            return (await collection.update({ bot.uuid: bot_id }, { $set: data_object }))
+            return (await collection.update({ [bot.uuid]: bot_id }, { $set: data_object }))
         }
     }
 
