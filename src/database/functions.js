@@ -14,17 +14,17 @@ class Calls {
         return (await collection.remove({ }))
     }
     
-    static async transmitBot(socket_id, data_object) {
+    static async transmitBot(bot_id, data_object) {
         const collection = db.get('bots')
-        let bot = await collection.findOne({socket_id: socket_id})
-        Logger.info('>> SEARCHING BOT', socket_id)
+        let bot = await collection.findOne({bot.uuid: bot_id})
+        Logger.info('>> SEARCHING BOT', bot_id)
 
         if (bot === null) {
-            Logger.info('>> INSERTING BOT', socket_id)
+            Logger.info('>> INSERTING BOT', bot_id)
             return (await collection.insert(data_object))
         } else {
-            Logger.info('>> UPDATING BOT', socket_id)
-            return (await collection.update({ socket_id: socket_id }, { $set: data_object }))
+            Logger.info('>> UPDATING BOT', bot_id)
+            return (await collection.update({ bot.uuid: bot_id }, { $set: data_object }))
         }
     }
 
