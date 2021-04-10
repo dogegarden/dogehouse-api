@@ -14,7 +14,7 @@
     "axios": "^0.21.1",
     "cors": "^2.8.5",
     "dateformat": "^4.5.1",
-    "dogehouse-js": "^0.1.0",
+    "dogehouse.js": "^2.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
