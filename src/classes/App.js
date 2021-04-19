@@ -110,7 +110,7 @@ class App {
 
         this.app.get('/v1/user/:id', async (req, res) => {
             try {
-                return res.json(await app.users.get(req.params.id))
+                return await res.json(await app.users.get(req.params.id))
             } catch(err) {
                 return(res.send({"Error": err}))
                 
@@ -119,8 +119,7 @@ class App {
 
         this.app.get('/v1/scheduledRooms', async (req, res) => {
             try {
-                app.rooms.scheduled.then(console.log)
-                return res.json(await app.rooms.scheduled)
+                return res.json("0")
             } catch(err) {
                 return(res.send({"Error": err}))
                 
