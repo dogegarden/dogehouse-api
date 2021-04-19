@@ -83,6 +83,8 @@ class App {
             })
             
             socket.on('transmit', async function (received) { //received data.
+                if (!received.bot.uuid) return
+                if (!received.bot.username) return
                 let new_data = {
                     socket_id: socket.id,
                     bot: { uuid: received.bot.uuid, username: received.bot.username || 'A Default Doge', avatar: received.bot.avatarURL  || 'https://cdn.discordapp.com/attachments/824724836936187974/824936185734234132/orangeDiscordIcon.png'},
@@ -236,7 +238,7 @@ class App {
         });
         
         this.app.get('/', (req, res) => {
-           return res.sendStatus(200).json({name: packageConfig.name, description: packageConfig.description, version: packageConfig.version})
+           return res.json({name: packageConfig.name, description: packageConfig.description, version: packageConfig.version})
         });
 
         this.app.use((req, res) => {
