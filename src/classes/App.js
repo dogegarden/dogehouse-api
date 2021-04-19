@@ -83,6 +83,7 @@ class App {
             })
             
             socket.on('transmit', async function (received) { //received data.
+                if (!received.bot) return
                 if (!received.bot.uuid) return
                 if (!received.bot.username) return
                 let new_data = {
