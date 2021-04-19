@@ -135,7 +135,7 @@ class App {
                 return res.send({
                     totalRooms: rooms.length,
                     totalScheduledRooms: 0,
-                    totalOnline: rooms.rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
+                    totalOnline: rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
                     totalBotsOnline: io.sockets.sockets.size,
                     totalBotsSendingTelemetry: bots_length
                 })
