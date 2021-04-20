@@ -113,7 +113,7 @@ class App {
 
         this.app.get('/v1/user/:id', async (req, res) => {
             try {
-                return await res.json(await app.users.get(req.params.id))
+                return await res.json(await app.users.get(req.params.id).toJson());
             } catch(err) {
                 return(res.send({"Error": err}))
                 
