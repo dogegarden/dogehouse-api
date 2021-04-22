@@ -112,12 +112,7 @@ class App {
         });
 
         this.app.get('/v1/user/:id', async (req, res) => {
-            try {
-                return await res.send(await app.users.get(req.params.id).toJson());
-            } catch(err) {
-                return(res.send({"Error": err}))
-                
-            }
+            return res.json((await app.users.get(req.params.id)).toJson());
         });
 
         this.app.get('/v1/scheduledRooms', async (req, res) => {

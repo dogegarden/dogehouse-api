@@ -1,6 +1,6 @@
 {
   "name": "dogehouse-api",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "support": "https://discord.gg/pPaXCRrVrh",
   "description": "A Public API to interact with DogeHouse.tv.",
   "main": "index.js",
