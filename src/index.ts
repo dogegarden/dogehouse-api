@@ -126,7 +126,7 @@ app.get('/v1/shields/users', async (req, res) => {
 
 app.get('/v1/popularRooms', async (req, res) => {
     try {
-        return res.json({rooms: await wrapper.query.getTopPublicRooms()})
+        return res.json(await wrapper.query.getTopPublicRooms())
     } catch(err) {
         return(res.send({"Error": err}))
     }
