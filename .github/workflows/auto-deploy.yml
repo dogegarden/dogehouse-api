@@ -22,4 +22,5 @@ jobs:
           git fetch --all
           git reset --hard origin/master
           npm install --save
+          npm run compile
           pm2 restart dogehouse-api
