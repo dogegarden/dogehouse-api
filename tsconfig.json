@@ -10,7 +10,6 @@
       "allowJs": true,
       "skipLibCheck": true,
       "baseUrl": ".",
-      "rootDir": "src",
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
       "strict": true,
