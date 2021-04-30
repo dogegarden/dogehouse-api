@@ -137,6 +137,7 @@ app.get('/v1/bots', async (req, res) => {
         console.log(await Calls.getAllBots())
         return res.json(await Calls.getAllBots())
     } catch(err) {
+        console.log(err)
         return(res.send({"Error": err}))
     }
 });
