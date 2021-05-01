@@ -144,7 +144,7 @@ app.get('/v1/bots', async (req, res) => {
 
 app.get('/v1/scheduledRooms', async (req, res) => {
     try {
-        return res.json({rooms: await wrapper.query.getScheduledRooms()})
+        return res.json(await wrapper.query.getScheduledRooms())
     } catch(err) {
         return(res.send({"Error": err}))
     }
@@ -196,5 +196,5 @@ app.use((req, res) => {
 });
 
 app.listen( port, () => {
-    Logger.route( `Running on http://localhost:${ port }` );
+    Logger.route( `Running on ${ port }` );
 } );
