@@ -175,6 +175,10 @@ app.get('/v1/search/:query', async (req, res) => {
     return res.json(await wrapper.query.search(`${(req.query.type == "room") ? '' : '@'}${req.params.query}`));
 });
 
+app.get('/v1/user/:id', async (req, res) => {
+    return res.json(await wrapper.query.getUserProfile(req.params.id));
+});
+
 app.get('/v1', (req, res) => {
 
     return res.json({ 
