@@ -156,10 +156,12 @@ app.get('/v1/statistics', async (req, res) => {
         let bots_length = 0;
         let rooms = (await wrapper.query.getTopPublicRooms()).rooms;
         let scheduledRooms = (await wrapper.query.getScheduledRooms()).scheduledRooms;
+        let benStats = (await axios.get("https://api.dogehouse.tv/stats")).data;
         return res.send({
             totalRooms: rooms.length,
             totalScheduledRooms: scheduledRooms.length,
-            totalRegistered: (await axios.get("https://api.dogehouse.tv/stats")).data.numUsers,
+            totalRegistered: benStats.numUsers,
+            activeInLastTwoDays: benStats.activeInLastTwoDays,
             totalOnline: rooms.map(it => it.numPeopleInside).reduce((a, b) => a + b, 0),
             totalBotsOnline: io.sockets.sockets.size,
             totalBotsSendingTelemetry: bots_length
