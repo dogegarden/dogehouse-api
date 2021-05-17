@@ -134,10 +134,8 @@ app.get('/v1/popularRooms', async (req, res) => {
 
 app.get('/v1/bots', async (req, res) => {
     try {
-        console.log(await Calls.getAllBots())
         return res.json(await Calls.getAllBots())
     } catch(err) {
-        console.log(err)
         return(res.send({"Error": err}))
     }
 });
@@ -152,8 +150,7 @@ app.get('/v1/scheduledRooms', async (req, res) => {
 
 app.get('/v1/statistics', async (req, res) => {
     try {
-        // let bots_length = await Calls.getAllBotsLength()
-        let bots_length = 0;
+        let bots_length = await Calls.getAllBotsLength()
         let rooms = (await wrapper.query.getTopPublicRooms()).rooms;
         let scheduledRooms = (await wrapper.query.getScheduledRooms()).scheduledRooms;
         return res.send({
@@ -178,7 +175,6 @@ app.get('/v1/user/:id', async (req, res) => {
 });
 
 app.get('/v1', (req, res) => {
-
     return res.json({ 
       name: info.name,
       support: info.support,
@@ -187,7 +183,6 @@ app.get('/v1', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-
     return res.json({ 
       name: info.name,
       support: info.support,
